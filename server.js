@@ -1,6 +1,8 @@
 const express = require('express');
 const bodyparse = require('body-parser');
 const cors = require('cors');
+const bcrypt = require('bcrypt');
+const session = require('express-session');
 
 const user = require('./database/models/user');
 
@@ -8,6 +10,13 @@ const app = express();
 
 app.use(express.json());
 app.use(cors());
+app.use(session({
+    secret: 'keyboard cat',
+    proxy: true,
+    resave: true,
+    saveUninitialized: true,
+    cookie: { secure: true }
+}))
 
 app.listen(21262, () => {
     console.log('Express started at http://localhost:21262');
@@ -23,22 +32,41 @@ app.use((req, res, next) => {
     next();
 });
 
+// Requisição de cadastro de usuário 
 app.post('/', function(req, res){
     const email = req.body.email;
     const senha = req.body.senha;
     const dataNascimento = req.body.dataNascimento;
+    const salt = bcrypt.genSaltSync(10);
+    const hash = bcrypt.hashSync(senha, salt);
+    user.findOne({where:{email:email}}).then(result =>{
+        if(result != null){
+            return res.json("Já existe esse email");
+        }else{
+            user.create({
+                email: email,
+                senha: hash,
+                dataNascimento: dataNascimento
+            }).then(() =>{return res.json("Sucesso ao gravar")})    
+        }
+    })
+   
+})
 
-    user.findOne({where: {email:email}}).then(result => {
-        if (result != null){
-            return res.json("E-mail já utlizado...");  
+// Requisição para login
+app.post('/login', (req,res)=>{
+    const email = req.body.email;
+    const senha = req.body.senha;
+
+    user.findOne({where:{email:email}}).then(result =>{
+        var verify = bcrypt.compareSync(senha,result.senha);
+        if(verify){
+            req.session.result = {email: result.email
+        }
+            return res.send(req.session.result)
         }
         else{
-            user.create({
-                email : email,
-                senha : senha,
-                dataNascimento: dataNascimento
-            }).then(() =>{return res.json("Sucesso ao gravar")})
-
+            return res.json("Erro ao logar")
         }
     })
 })
