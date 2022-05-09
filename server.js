@@ -58,15 +58,17 @@ app.post('/login', (req,res)=>{
     const email = req.body.email;
     const senha = req.body.senha;
 
-    user.findOne({where:{email:email}}).then(result =>{
+    user.findOne({where:{email:email}}).then(result => {
         var verify = bcrypt.compareSync(senha,result.senha);
         if(verify){
-            req.session.result = {email: result.email
+            req.session.result = {
+                id: result.id,
+                email: result.email
         }
             return res.send(req.session.result)
         }
         else{
-            return res.json("Erro ao logar")
+            return res.json(1)
         }
     })
 })
