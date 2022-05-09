@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt');
 const session = require('express-session');
 
 const user = require('./database/models/user');
+const perfil = require('./database/models/perfil');
 
 const app = express();
 
@@ -22,7 +23,6 @@ app.listen(21262, () => {
     console.log('Express started at http://localhost:21262');
 })
 
-////////////////////////////////////////////////
 app.use((req, res, next) => {
 	//Qual site tem permissão de realizar a conexão, no exemplo abaixo está o "*" indicando que qualquer site pode fazer a conexão
     res.header("Access-Control-Allow-Origin", "*");
@@ -54,7 +54,7 @@ app.post('/', function(req, res){
 })
 
 // Requisição para login
-app.post('/login', (req,res)=>{
+app.post('/login', (req,res)=> {
     const email = req.body.email;
     const senha = req.body.senha;
 
