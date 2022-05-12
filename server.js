@@ -8,7 +8,6 @@ const user = require('./database/models/user');
 
 const app = express();
 
-
 app.use(express.json());
 app.use(cors());
 app.use(session({
@@ -72,4 +71,3 @@ app.post('/login', (req,res)=> {
         }
     })
 })
-
