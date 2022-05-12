@@ -5,9 +5,9 @@ const bcrypt = require('bcrypt');
 const session = require('express-session');
 
 const user = require('./database/models/user');
-const perfil = require('./database/models/perfil');
 
 const app = express();
+
 
 app.use(express.json());
 app.use(cors());
@@ -72,3 +72,4 @@ app.post('/login', (req,res)=> {
         }
     })
 })
+
