@@ -18,7 +18,11 @@ app.use(session({
     cookie: { secure: true }
 }))
 
-const port = process.env['PORT_api']
+const port = 21262;
+
+app.get("/", function (req,res){
+    res.send("Jera desafio");
+});
 
 app.listen(port, () => {
     console.log('Express started at http://localhost:21262');
