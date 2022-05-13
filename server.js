@@ -20,7 +20,7 @@ app.use(session({
 
 const port = 21262;
 
-app.get("/", function (req,res){
+app.get("/home", function (req,res){
     res.send("Jera desafio");
 });
 
