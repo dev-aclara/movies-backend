@@ -18,7 +18,7 @@ app.use(session({
     cookie: { secure: true }
 }))
 
-const port = process.env || 21262;
+const port = process.env['PORT_api']
 
 app.listen(port, () => {
     console.log('Express started at http://localhost:21262');
